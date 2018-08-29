@@ -1,5 +1,6 @@
 *.~*
 .vscode/
-build/
+build/addresses.json
+build/contracts/
 node_modules/
 tmp/
