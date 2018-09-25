@@ -157,7 +157,7 @@ contract Hasher is Ownable {
                 trade.seller.fees.single.currency.ct,
                 trade.seller.fees.single.currency.id
             // TODO Consider adding dynamic size 'trade.seller.fees.net' to hash
-            // trade.seller.fees.net
+            //             trade.seller.fees.net
             ));
     }
 
@@ -183,14 +183,23 @@ contract Hasher is Ownable {
     }
 
     function hashPaymentSenderDataAsExchange(StriimTypes.Payment payment) public pure returns (bytes32) {
-        return keccak256(abi.encodePacked(
+        bytes32 hash = keccak256(abi.encodePacked(
                 payment.sender.nonce,
                 payment.sender.balances.current,
                 payment.sender.balances.previous,
                 payment.sender.fees.single.amount,
                 payment.sender.fees.single.currency.ct,
-                payment.sender.fees.single.currency.id
-            ));
+                payment.sender.fees.single.currency.id));
+        for (uint256 i = 0; i < payment.sender.fees.net.length; i++) {
+            hash = keccak256(abi.encodePacked(
+                    hash,
+                    payment.sender.fees.net[i].amount,
+                    payment.sender.fees.net[i].currency.ct,
+                    payment.sender.fees.net[i].currency.id
+                )
+            );
+        }
+        return hash;
     }
 
     function hashPaymentRecipientDataAsWallet(StriimTypes.Payment payment) public pure returns (bytes32) {
@@ -198,11 +207,21 @@ contract Hasher is Ownable {
     }
 
     function hashPaymentRecipientDataAsExchange(StriimTypes.Payment payment) public pure returns (bytes32) {
-        return keccak256(abi.encodePacked(
+        bytes32 hash = keccak256(abi.encodePacked(
                 payment.recipient.nonce,
                 payment.recipient.balances.current,
                 payment.recipient.balances.previous
             ));
+        for (uint256 i = 0; i < payment.recipient.fees.net.length; i++) {
+            hash = keccak256(abi.encodePacked(
+                    hash,
+                    payment.recipient.fees.net[i].amount,
+                    payment.recipient.fees.net[i].currency.ct,
+                    payment.recipient.fees.net[i].currency.id
+                )
+            );
+        }
+        return hash;
     }
 
     function hashPaymentTransfersData(StriimTypes.Payment payment) public pure returns (bytes32) {

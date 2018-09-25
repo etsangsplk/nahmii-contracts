@@ -441,23 +441,35 @@ exports.hashPaymentAsExchange = (payment) => {
     const nonceHash = cryptography.hash(
         payment.nonce
     );
-    const senderHash = cryptography.hash(
+    let senderHash = cryptography.hash(
         payment.sender.nonce,
         payment.sender.balances.current,
         payment.sender.balances.previous,
         payment.sender.fees.single.amount,
         payment.sender.fees.single.currency.ct,
         payment.sender.fees.single.currency.id
-        // TODO Consider adding dynamic size 'payment.sender.fees.net' to exchange hash
-        // payment.sender.fees.net
     );
-    const recipientHash = cryptography.hash(
+    for (let i = 0; i < payment.sender.fees.net.length; i++) {
+        senderHash = cryptography.hash(
+            senderHash,
+            payment.sender.fees.net[i].amount,
+            payment.sender.fees.net[i].currency.ct,
+            payment.sender.fees.net[i].currency.id
+        );
+    }
+    let recipientHash = cryptography.hash(
         payment.recipient.nonce,
         payment.recipient.balances.current,
         payment.recipient.balances.previous
-        // TODO Consider adding dynamic size 'payment.recipient.fees.net' to exchange hash
-        // payment.recipient.fees.net
     );
+    for (let i = 0; i < payment.recipient.fees.net.length; i++) {
+        recipientHash = cryptography.hash(
+            recipientHash,
+            payment.recipient.fees.net[i].amount,
+            payment.recipient.fees.net[i].currency.ct,
+            payment.recipient.fees.net[i].currency.id
+        );
+    }
     const transfersHash = cryptography.hash(
         payment.transfers.single,
         payment.transfers.net
