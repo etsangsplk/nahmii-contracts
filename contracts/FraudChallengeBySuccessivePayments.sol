@@ -50,14 +50,9 @@ SecurityBondable, ClientFundable {
     )
     public
     onlyOperationalModeNormal
-    validatorInitialized
     onlySealedPayment(firstPayment)
     onlySealedPayment(lastPayment)
     {
-        require(configuration != address(0));
-        require(fraudChallenge != address(0));
-        require(clientFund != address(0));
-
         require(validator.isPaymentParty(firstPayment, wallet));
         require(validator.isPaymentParty(lastPayment, wallet));
         require(firstPayment.currency.ct == lastPayment.currency.ct && firstPayment.currency.id == lastPayment.currency.id);

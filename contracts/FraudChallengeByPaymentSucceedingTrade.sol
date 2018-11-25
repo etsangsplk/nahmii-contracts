@@ -54,14 +54,9 @@ SecurityBondable, ClientFundable {
     )
     public
     onlyOperationalModeNormal
-    validatorInitialized
     onlySealedTrade(trade)
     onlySealedPayment(payment)
     {
-        require(configuration != address(0));
-        require(fraudChallenge != address(0));
-        require(clientFund != address(0));
-
         require(validator.isTradeParty(trade, wallet));
         require(validator.isPaymentParty(payment, wallet));
         require((currencyCt == trade.currencies.intended.ct && currencyId == trade.currencies.intended.id)

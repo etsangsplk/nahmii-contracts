@@ -41,13 +41,8 @@ SecurityBondable, ClientFundable {
     /// @param trade Fraudulent trade candidate
     function challenge(NahmiiTypesLib.Trade trade) public
     onlyOperationalModeNormal
-    validatorInitialized
     onlySealedTrade(trade)
     {
-        require(fraudChallenge != address(0));
-        require(configuration != address(0));
-        require(clientFund != address(0));
-
         // Genuineness affected by buyer
         bool genuineBuyerAndFee = validator.isGenuineTradeBuyer(trade)
         && validator.isGenuineTradeBuyerFee(trade);
