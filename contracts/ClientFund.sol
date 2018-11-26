@@ -81,7 +81,7 @@ contract ClientFund is Ownable, Configurable, Beneficiary, Benefactor, Authoriza
     event UpdateSettledBalanceEvent(address wallet, int256 amount, address currencyCt, uint256 currencyId);
     event StageToBeneficiaryEvent(address sourceWallet, address beneficiary, int256 amount, address currencyCt,
         uint256 currencyId, string standard);
-    event TransferToBeneficiaryEvent(address beneficiary, int256 amount, address currencyCt, uint256 currencyId);
+    event TransferToBeneficiaryEvent(address wallet, address beneficiary, int256 amount, address currencyCt, uint256 currencyId);
     event LockBalancesEvent(address lockedWallet, address lockerWallet);
     event UnlockBalancesEvent(address lockedWallet, address lockerWallet);
     event UnlockBalancesByProxyEvent(address lockedWallet, address lockerWallet);
@@ -419,22 +419,23 @@ contract ClientFund is Ownable, Configurable, Beneficiary, Benefactor, Authoriza
     }
 
     /// @notice Transfer the given amount of currency to the given beneficiary without target wallet
+    /// @param wallet The address of the concerned wallet
     /// @param beneficiary The (address of) concerned beneficiary contract
     /// @param amount The concerned amount
     /// @param currencyCt The address of the concerned currency contract (address(0) == ETH)
     /// @param currencyId The ID of the concerned currency (0 for ETH and ERC20)
     /// @param standard The standard of token ("ERC20", "ERC721")
-    function transferToBeneficiary(Beneficiary beneficiary, int256 amount,
+    function transferToBeneficiary(address wallet, Beneficiary beneficiary, int256 amount,
         address currencyCt, uint256 currencyId, string standard)
     public
     notNullAddress(beneficiary)
     onlyActiveService
     {
         // Transfer to beneficiary
-        transferToBeneficiaryPrivate(address(0), beneficiary, amount, currencyCt, currencyId, standard);
+        transferToBeneficiaryPrivate(wallet, beneficiary, amount, currencyCt, currencyId, standard);
 
         // Emit event
-        emit TransferToBeneficiaryEvent(beneficiary, amount, currencyCt, currencyId);
+        emit TransferToBeneficiaryEvent(wallet, beneficiary, amount, currencyCt, currencyId);
     }
 
     /// @notice Lock balances of the given locked wallet allowing them to be seized by
