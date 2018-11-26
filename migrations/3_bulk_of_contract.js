@@ -333,6 +333,10 @@ module.exports = (deployer, network, accounts) => {
             await instance.registerBeneficiary(addressStorage.get('PaymentsRevenueFund'));
             await instance.registerBeneficiary(addressStorage.get('TradesRevenueFund'));
 
+            instance = await CancelOrdersChallenge.at(addressStorage.get('CancelOrdersChallenge'));
+            await instance.setValidator(addressStorage.get('Validator'));
+            await instance.setConfiguration(addressStorage.get('Configuration'));
+
             instance = await DriipSettlement.at(addressStorage.get('DriipSettlement'));
             await instance.setClientFund(addressStorage.get('ClientFund'));
             await instance.setValidator(addressStorage.get('Validator'));
@@ -342,16 +346,7 @@ module.exports = (deployer, network, accounts) => {
             await instance.setDriipSettlementChallenge(addressStorage.get('DriipSettlementChallenge'));
             await instance.setTradesRevenueFund(addressStorage.get('TradesRevenueFund'));
             await instance.setPaymentsRevenueFund(addressStorage.get('PaymentsRevenueFund'));
-
-            instance = await NullSettlement.at(addressStorage.get('NullSettlement'));
-            await instance.setConfiguration(addressStorage.get('Configuration'));
-            await instance.setClientFund(addressStorage.get('ClientFund'));
-            await instance.setCommunityVote(addressStorage.get('CommunityVote'));
-            await instance.setNullSettlementChallenge(addressStorage.get('NullSettlementChallenge'));
-
-            instance = await CancelOrdersChallenge.at(addressStorage.get('CancelOrdersChallenge'));
-            await instance.setValidator(addressStorage.get('Validator'));
-            await instance.setConfiguration(addressStorage.get('Configuration'));
+            await instance.setPartnerFund(addressStorage.get('PartnerFund'));
 
             instance = await DriipSettlementChallenge.at(addressStorage.get('DriipSettlementChallenge'));
             await instance.setConfiguration(addressStorage.get('Configuration'));
@@ -366,6 +361,12 @@ module.exports = (deployer, network, accounts) => {
             await instance.setFraudChallenge(addressStorage.get('FraudChallenge'));
             await instance.setCancelOrdersChallenge(addressStorage.get('CancelOrdersChallenge'));
             await instance.setDriipSettlementChallenge(addressStorage.get('DriipSettlementChallenge'));
+
+            instance = await NullSettlement.at(addressStorage.get('NullSettlement'));
+            await instance.setConfiguration(addressStorage.get('Configuration'));
+            await instance.setClientFund(addressStorage.get('ClientFund'));
+            await instance.setCommunityVote(addressStorage.get('CommunityVote'));
+            await instance.setNullSettlementChallenge(addressStorage.get('NullSettlementChallenge'));
 
             instance = await NullSettlementChallenge.at(addressStorage.get('NullSettlementChallenge'));
             await instance.setConfiguration(addressStorage.get('Configuration'));
