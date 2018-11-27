@@ -412,7 +412,7 @@ contract ClientFund is Ownable, Configurable, Beneficiary, Benefactor, Authoriza
         walletMap[wallet].active.add(activeBalance(wallet, currencyCt, currencyId), currencyCt, currencyId);
 
         // Transfer to beneficiary
-        transferToBeneficiaryPrivate(wallet, beneficiary, amount, currencyCt, currencyId, standard);
+        _transferToBeneficiary(wallet, beneficiary, amount, currencyCt, currencyId, standard);
 
         // Emit event
         emit StageToBeneficiaryEvent(wallet, beneficiary, amount, currencyCt, currencyId, standard);
@@ -432,7 +432,7 @@ contract ClientFund is Ownable, Configurable, Beneficiary, Benefactor, Authoriza
     onlyActiveService
     {
         // Transfer to beneficiary
-        transferToBeneficiaryPrivate(wallet, beneficiary, amount, currencyCt, currencyId, standard);
+        _transferToBeneficiary(wallet, beneficiary, amount, currencyCt, currencyId, standard);
 
         // Emit event
         emit TransferToBeneficiaryEvent(wallet, beneficiary, amount, currencyCt, currencyId);
@@ -475,7 +475,7 @@ contract ClientFund is Ownable, Configurable, Beneficiary, Benefactor, Authoriza
         address locker = walletMap[msg.sender].locker;
 
         // Unlock balances
-        unlockBalancesPrivate(msg.sender);
+        _unlockBalances(msg.sender);
 
         // Emit event
         emit UnlockBalancesEvent(msg.sender, locker);
@@ -491,7 +491,7 @@ contract ClientFund is Ownable, Configurable, Beneficiary, Benefactor, Authoriza
         address locker = walletMap[msg.sender].locker;
 
         // Unlock balances
-        unlockBalancesPrivate(wallet);
+        _unlockBalances(wallet);
 
         // Emit event
         emit UnlockBalancesByProxyEvent(msg.sender, locker);
@@ -675,7 +675,7 @@ contract ClientFund is Ownable, Configurable, Beneficiary, Benefactor, Authoriza
         );
     }
 
-    function transferToBeneficiaryPrivate(address destWallet, Beneficiary beneficiary,
+    function _transferToBeneficiary(address destWallet, Beneficiary beneficiary,
         int256 amount, address currencyCt, uint256 currencyId, string standard)
     private
     {
@@ -714,7 +714,7 @@ contract ClientFund is Ownable, Configurable, Beneficiary, Benefactor, Authoriza
         walletMap[wallet].staged.set(0, currencyCt, currencyId);
     }
 
-    function unlockBalancesPrivate(address wallet)
+    function _unlockBalances(address wallet)
     private
     {
         // Unlock and release
